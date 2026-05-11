@@ -1,0 +1,90 @@
+import { MarkdownView, Plugin } from 'obsidian';
+import { VaultWithConfig } from './types';
+
+const DOUBLE_G_TIMEOUT_MS = 500;
+const FALLBACK_LINE_HEIGHT_PX = 24;
+
+export class ReadingModeScrollHandler {
+	private lastGPressTime = 0;
+	private plugin: Plugin;
+
+	constructor(plugin: Plugin) {
+		this.plugin = plugin;
+	}
+
+	register(): void {
+		this.plugin.registerDomEvent(document, 'keydown', (evt: KeyboardEvent) => {
+			this.handleKeyDown(evt);
+		});
+	}
+
+	private handleKeyDown(evt: KeyboardEvent): void {
+		const view = this.plugin.app.workspace.getActiveViewOfType(MarkdownView);
+		if (!view || view.getMode() !== 'preview') return;
+		if (!this.isVimModeEnabled()) return;
+
+		const scrollEl = this.getScrollElement(view);
+		if (!scrollEl) return;
+
+		const { key, ctrlKey, metaKey, altKey } = evt;
+
+		// Ignore combinations with Meta/Alt to avoid interfering with system shortcuts
+		if (metaKey || altKey) return;
+
+		if (!ctrlKey) {
+			switch (key) {
+				case 'j':
+					evt.preventDefault();
+					scrollEl.scrollTop += this.getLineHeight(scrollEl);
+					break;
+				case 'k':
+					evt.preventDefault();
+					scrollEl.scrollTop -= this.getLineHeight(scrollEl);
+					break;
+				case 'g': {
+					evt.preventDefault();
+					const now = Date.now();
+					if (now - this.lastGPressTime <= DOUBLE_G_TIMEOUT_MS) {
+						scrollEl.scrollTop = 0;
+						this.lastGPressTime = 0;
+					} else {
+						this.lastGPressTime = now;
+					}
+					break;
+				}
+				case 'G':
+					evt.preventDefault();
+					scrollEl.scrollTop = scrollEl.scrollHeight;
+					break;
+			}
+		} else {
+			switch (key) {
+				case 'd':
+					evt.preventDefault();
+					scrollEl.scrollTop += scrollEl.clientHeight / 2;
+					break;
+				case 'u':
+					evt.preventDefault();
+					scrollEl.scrollTop -= scrollEl.clientHeight / 2;
+					break;
+			}
+		}
+	}
+
+	private isVimModeEnabled(): boolean {
+		return (this.plugin.app.vault as VaultWithConfig).getConfig('vimMode') === true;
+	}
+
+	private getScrollElement(view: MarkdownView): HTMLElement | null {
+		return view.containerEl.querySelector<HTMLElement>('.markdown-preview-view');
+	}
+
+	private getLineHeight(scrollEl: HTMLElement): number {
+		const line = scrollEl.querySelector<HTMLElement>('p, li, h1, h2, h3, h4, h5, h6');
+		if (line) {
+			const height = line.getBoundingClientRect().height;
+			if (height > 0) return height;
+		}
+		return FALLBACK_LINE_HEIGHT_PX;
+	}
+}
