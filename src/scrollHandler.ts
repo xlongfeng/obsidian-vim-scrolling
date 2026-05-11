@@ -19,6 +19,9 @@ export class ReadingModeScrollHandler {
 	}
 
 	private handleKeyDown(evt: KeyboardEvent): void {
+		// Don't intercept keys when a modal/dialog is open or focus is in an input
+		if (this.isFocusInModal(evt)) return;
+
 		const view = this.plugin.app.workspace.getActiveViewOfType(MarkdownView);
 		if (!view || view.getMode() !== 'preview') return;
 		if (!this.isVimModeEnabled()) return;
@@ -69,6 +72,22 @@ export class ReadingModeScrollHandler {
 					break;
 			}
 		}
+	}
+
+	private isFocusInModal(evt: KeyboardEvent): boolean {
+		const target = evt.target as HTMLElement;
+		// Yield to any focused input-like element
+		if (
+			target.tagName === 'INPUT' ||
+			target.tagName === 'TEXTAREA' ||
+			target.tagName === 'SELECT' ||
+			target.isContentEditable
+		) return true;
+		// Yield to Obsidian modals, prompts, and suggestion dropdowns
+		if (target.closest('.modal-container, .prompt, .suggestion-container')) return true;
+		// Yield if any modal overlay is currently visible in the DOM
+		if (document.querySelector('.modal-container')) return true;
+		return false;
 	}
 
 	private isVimModeEnabled(): boolean {
