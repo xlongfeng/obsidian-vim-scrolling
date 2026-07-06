@@ -1,14 +1,14 @@
 # Obsidian Vim Scrolling
 
-An Obsidian plugin that adds vim-style scrolling in **reading mode** when Obsidian's vim key bindings are enabled.
+An Obsidian plugin that adds vim-style scrolling in **reading view** when Obsidian's vim key bindings are enabled.
 
 ## Design Idea
 
-Obsidian's built-in vim key bindings (powered by CodeMirror's vim mode) are active in source and live preview modes — but **reading mode** renders static HTML with no editor, so vim navigation keys (`j`, `k`, `Ctrl+D`, `Ctrl+U`, `gg`, `G`) do nothing there.
+Obsidian's built-in vim key bindings (powered by CodeMirror's vim mode) are active in source and live preview modes — but **reading view** renders static HTML with no editor, so vim navigation keys (`j`, `k`, `Ctrl+d`, `Ctrl+u`, `gg`, `G`) do nothing there.
 
-This plugin fills that gap: it intercepts those keystrokes in reading mode and scrolls the viewport directly, giving you consistent vim muscle memory regardless of which mode you are in.
+This plugin fills that gap: it intercepts those keystrokes in reading view and scrolls the viewport directly, giving you consistent vim muscle memory regardless of which mode you are in.
 
-It also handles a common friction point: after scrolling in reading mode, switching back to source mode may leave the cursor far from the visible content. The plugin corrects the cursor position so it matches what you were reading.
+It also handles a common friction point: after scrolling in reading view, switching back to source mode may leave the cursor far from the visible content. The plugin corrects the cursor position so it matches what you were reading.
 
 ## Key Mappings
 
@@ -16,13 +16,13 @@ It also handles a common friction point: after scrolling in reading mode, switch
 |-----|--------|
 | `j` | Scroll down one line |
 | `k` | Scroll up one line |
-| `Ctrl+D` | Scroll down half a page |
-| `Ctrl+U` | Scroll up half a page |
+| `Ctrl+d` | Scroll down half a page |
+| `Ctrl+u` | Scroll up half a page |
 | `gg` | Scroll to the top of the document |
 | `G` | Scroll to the bottom of the document |
 
 Keys are only active when:
-1. The current view is in **reading mode** (preview)
+1. The current view is in **reading view** (preview)
 2. Obsidian's **vim mode** is enabled (Settings → Editor → Vim key bindings)
 
 ## Design Details
@@ -43,7 +43,7 @@ The `gg` command is triggered by pressing `g` twice within **500 ms**. After the
 
 ### Cursor Adjustment (Reading → Source Mode)
 
-When you switch from reading mode to source mode, the CodeMirror editor restores the cursor to its last known position, which may no longer be visible (because you scrolled in reading mode). The plugin corrects this after the editor initialises:
+When you switch from reading view to source mode, the CodeMirror editor restores the cursor to its last known position, which may no longer be visible (because you scrolled in reading view). The plugin corrects this after the editor initialises:
 
 - **Cursor is outside the visible viewport** (above or below) → cursor is moved to the **first editable line** of the current viewport.
 - **Cursor is within the viewport** → cursor is left **unchanged**.
@@ -54,8 +54,8 @@ This ensures the editor opens with the cursor near the content you were reading.
 
 1. Enable **vim key bindings** in Obsidian: **Settings → Editor → Vim key bindings**
 2. Install and enable this plugin.
-3. Open any note and switch to **Reading mode** (the book icon in the top-right, or via the command palette).
-4. Use `j`/`k`, `Ctrl+D`/`Ctrl+U`, `gg`, and `G` to navigate.
+3. Open any note and switch to **Reading view** (the book icon in the top-right, or via the command palette).
+4. Use `j`/`k`, `Ctrl+d`/`Ctrl+u`, `gg`, and `G` to navigate.
 
 ## Installation
 
