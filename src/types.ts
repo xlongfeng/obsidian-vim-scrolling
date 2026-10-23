@@ -21,6 +21,23 @@ export interface EditorWithCM extends Editor {
 	cm: CMEditorView;
 }
 
+export type SearchDirection = 'forward' | 'backward';
+
+/** Minimal shape of the CSS Custom Highlight API, which the bundled TS DOM types lack */
+export interface HighlightLike {
+	priority: number;
+}
+
+export interface HighlightWindow {
+	CSS?: {
+		highlights?: {
+			set(name: string, highlight: HighlightLike): unknown;
+			delete(name: string): boolean;
+		};
+	};
+	Highlight: new (...ranges: Range[]) => HighlightLike;
+}
+
 /** Obsidian exposes getConfig on Vault but does not include it in the public types */
 export interface VaultWithConfig extends Vault {
 	getConfig(key: string): unknown;

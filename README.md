@@ -20,6 +20,11 @@ It also handles a common friction point: after scrolling in reading view, switch
 | `Ctrl+u` | Scroll up half a page |
 | `gg` | Scroll to the top of the document |
 | `G` | Scroll to the bottom of the document |
+| `/` | Search forward; opens a command line at the bottom |
+| `?` | Search backward |
+| `n` | Next match (in the search direction) |
+| `N` | Previous match (opposite direction) |
+| `Esc` | Clear search highlights |
 
 Keys are only active when:
 1. The current view is in **reading view** (preview)
@@ -40,6 +45,19 @@ Holding a key (e.g., `j`) produces repeated `keydown` events. Each event is hand
 ### `gg` Detection
 
 The `gg` command is triggered by pressing `g` twice within **500 ms**. After the first `g`, the timer starts. If a second `g` arrives within the window, the view scrolls to the top.
+
+### Search
+
+Pressing `/` (or `?`) opens a command line at the bottom of the reading view.
+
+- **Incremental**: matches are highlighted and scrolled into view as you type.
+- **Smartcase**: case-insensitive unless the query contains an uppercase letter.
+- **Literal text**: the query is not a regular expression; phrases spanning inline formatting (e.g. `foo **bar**`) still match.
+- **Highlighting**: all matches are highlighted and the current one is emphasised (CSS Custom Highlight API, no DOM changes).
+- **Wrap around** at the first/last match; the bar shows the match count.
+- `Enter` confirms, `Esc` (or Backspace on an empty input) cancels. After confirming, use `n`/`N` and `Esc` to clear highlights.
+- Shows "Pattern not found" when nothing matches.
+- Only rendered content is searched.
 
 ### Cursor Adjustment (Reading → Source Mode)
 

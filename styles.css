@@ -1,8 +1,62 @@
-/*
+/* Search command line, shown at the bottom of the reading view */
+.vim-reading-view-search-host {
+	position: relative;
+}
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+.vim-reading-view-search-bar {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: var(--layer-popover);
+	display: flex;
+	align-items: center;
+	gap: var(--size-4-1);
+	padding: var(--size-2-2) var(--size-4-2);
+	background-color: var(--background-primary);
+	border-top: 1px solid var(--background-modifier-border);
+	font-family: var(--font-monospace);
+	font-size: var(--code-size, var(--font-text-size));
+	line-height: var(--line-height-normal);
+}
 
-If your plugin does not need CSS, delete this file.
+.vim-reading-view-search-prefix {
+	color: var(--text-normal);
+}
 
-*/
+.vim-reading-view-search-bar .vim-reading-view-search-input,
+.vim-reading-view-search-bar .vim-reading-view-search-input:hover,
+.vim-reading-view-search-bar .vim-reading-view-search-input:focus,
+.vim-reading-view-search-bar .vim-reading-view-search-input:focus-visible,
+.vim-reading-view-search-bar .vim-reading-view-search-input:active {
+	border: none;
+	outline: none;
+	box-shadow: none;
+	background: transparent;
+}
+
+.vim-reading-view-search-bar .vim-reading-view-search-input {
+	flex: 1;
+	min-width: 0;
+	padding: 0;
+	height: auto;
+	font-family: inherit;
+	font-size: var(--font-ui-small);
+	color: var(--text-normal);
+}
+
+.vim-reading-view-search-status {
+	color: var(--text-faint);
+	font-size: var(--font-ui-smaller);
+}
+
+/* Search matches painted with the CSS Custom Highlight API */
+::highlight(vim-reading-view-search) {
+	background-color: var(--text-highlight-bg);
+	color: var(--text-normal);
+}
+
+::highlight(vim-reading-view-search-current) {
+	background-color: var(--interactive-accent);
+	color: var(--text-on-accent);
+}

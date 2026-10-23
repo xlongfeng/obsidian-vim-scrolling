@@ -1,4 +1,5 @@
 import { MarkdownView, Plugin } from 'obsidian';
+import { SearchController } from './search/searchController';
 import { VaultWithConfig } from './types';
 
 const DOUBLE_G_TIMEOUT_MS = 500;
@@ -7,13 +8,15 @@ const FALLBACK_LINE_HEIGHT_PX = 24;
 export class ReadingModeScrollHandler {
 	private lastGPressTime = 0;
 	private plugin: Plugin;
+	private search: SearchController;
 
-	constructor(plugin: Plugin) {
+	constructor(plugin: Plugin, search: SearchController) {
 		this.plugin = plugin;
+		this.search = search;
 	}
 
 	register(): void {
-		// Listen on the window: listeners on activeDocument stop receiving keys after the plugin is toggled
+		// Listen on the window rather than activeDocument: after a plugin toggle, activeDocument listeners did not receive key events
 		const listen = (win: Window) => {
 			this.plugin.registerDomEvent(win, 'keydown', (evt: KeyboardEvent) => {
 				this.handleKeyDown(evt);
@@ -64,6 +67,29 @@ export class ReadingModeScrollHandler {
 				case 'G':
 					evt.preventDefault();
 					scrollEl.scrollTop = scrollEl.scrollHeight;
+					break;
+				case '/':
+					evt.preventDefault();
+					this.search.open(view, scrollEl, 'forward');
+					break;
+				case '?':
+					evt.preventDefault();
+					this.search.open(view, scrollEl, 'backward');
+					break;
+				case 'n':
+					evt.preventDefault();
+					this.search.step(view, scrollEl, false);
+					break;
+				case 'N':
+					evt.preventDefault();
+					this.search.step(view, scrollEl, true);
+					break;
+				case 'Escape':
+					// Only swallow Esc when there are highlights to clear
+					if (this.search.hasHighlights()) {
+						evt.preventDefault();
+						this.search.clear();
+					}
 					break;
 			}
 		} else {

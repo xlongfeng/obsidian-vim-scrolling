@@ -48,6 +48,7 @@ Uses ESLint with [`eslint-plugin-obsidianmd`](https://github.com/obsidianmd/esli
 src/
   main.ts          # Plugin entry point — lifecycle only (onload, onunload)
   scrollHandler.ts # Keydown listener and vim scroll commands for reading view
+  search/          # `/` search: searchEngine, searchHighlight, searchBar, searchController
   cursorManager.ts # Cursor correction when switching reading → source mode
   settings.ts      # Settings interface, defaults, and SettingTab
   types.ts         # Shared TypeScript interfaces
