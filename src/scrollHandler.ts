@@ -13,9 +13,15 @@ export class ReadingModeScrollHandler {
 	}
 
 	register(): void {
-		this.plugin.registerDomEvent(activeDocument, 'keydown', (evt: KeyboardEvent) => {
-			this.handleKeyDown(evt);
-		});
+		// Listen on the window: listeners on activeDocument stop receiving keys after the plugin is toggled
+		const listen = (win: Window) => {
+			this.plugin.registerDomEvent(win, 'keydown', (evt: KeyboardEvent) => {
+				this.handleKeyDown(evt);
+			}, { capture: true });
+		};
+
+		listen(window);
+		this.plugin.registerEvent(this.plugin.app.workspace.on('window-open', (_ws, win) => listen(win)));
 	}
 
 	private handleKeyDown(evt: KeyboardEvent): void {
