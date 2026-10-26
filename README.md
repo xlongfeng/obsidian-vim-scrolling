@@ -1,14 +1,10 @@
 # Obsidian Vim Scrolling
 
-An Obsidian plugin that adds vim-style scrolling in **reading view** when Obsidian's vim key bindings are enabled.
+An Obsidian plugin that brings vim-style navigation and search to **Reading view** when Obsidian's vim key bindings are enabled:
 
-## Design Idea
-
-Obsidian's built-in vim key bindings (powered by CodeMirror's vim mode) are active in source and live preview modes — but **reading view** renders static HTML with no editor, so vim navigation keys (`j`, `k`, `Ctrl+d`, `Ctrl+u`, `gg`, `G`) do nothing there.
-
-This plugin fills that gap: it intercepts those keystrokes in reading view and scrolls the viewport directly, giving you consistent vim muscle memory regardless of which mode you are in.
-
-It also handles a common friction point: after scrolling in reading view, switching back to source mode may leave the cursor far from the visible content. The plugin corrects the cursor position so it matches what you were reading.
+- **Navigation**: `j`/`k`, `Ctrl+d`/`Ctrl+u`, `gg` and `G`.
+- **Search**: `/` and `?` search the current note (incremental, smartcase, all matches highlighted); `n`/`N` jump between matches.
+- **Cursor sync**: switching back to source mode moves the cursor into the part of the note you were reading.
 
 ## Key Mappings
 
@@ -91,4 +87,12 @@ cd vim-scrolling
 npm install
 npm run dev   # watch mode — compiles src/main.ts → main.js
 ```
+
+## Design Idea
+
+Obsidian's built-in vim key bindings (powered by CodeMirror's vim mode) are active in source and live preview modes — but **reading view** renders static HTML with no editor, so vim navigation keys (`j`, `k`, `Ctrl+d`, `Ctrl+u`, `gg`, `G`) do nothing there.
+
+This plugin fills that gap: it intercepts those keystrokes in reading view and scrolls the viewport directly, giving you consistent vim muscle memory regardless of which mode you are in.
+
+It also handles a common friction point: after scrolling in reading view, switching back to source mode may leave the cursor far from the visible content. The plugin corrects the cursor position so it matches what you were reading.
 

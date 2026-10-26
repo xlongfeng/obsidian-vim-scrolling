@@ -1,7 +1,7 @@
 {
 	"name": "vim-scrolling",
 	"version": "1.0.3",
-	"description": "Vim-style keyboard navigation (j/k, Ctrl+d/u, gg, G) for scrolling in reading view (preview) when vim key bindings are enabled.",
+	"description": "Vim-style navigation and search in reading view (preview) when vim key bindings are enabled.",
 	"main": "main.js",
 	"type": "module",
 	"author": "xlongfeng",
